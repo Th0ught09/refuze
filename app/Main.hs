@@ -1,6 +1,8 @@
 module Main where
 
 import System.Environment (getArgs)
+import System.Exit
+import System.IO
 import System.Random
 import Text.Regex.TDFA
 
@@ -11,21 +13,25 @@ data RTree a = Nil | Node (RTree a) (RTree a)
 main :: IO ()
 main = do
   a <- randomRIO (1 :: Int, 20)
-  print a
+  args <- getArguments
+  putStrLn "filler"
+  hPutStrLn stderr "err"
+
+getArguments = do
   args <- getArgs
   case args of
-    [regex, string] -> putStrLn (checkInput regex string)
-    _ -> putStrLn "needs 2 arguments"
+    [regex, string] -> checkInput regex, string
+    _ -> exitWith (ExitFailure 2)
 
-checkInput :: String -> String -> String
+checkInput :: String -> String -> Int
 checkInput regex string
-  | string =~ regex = do
-      "works"
-      startTree regex string
-  | otherwise = "ensure the string mathces the regex"
+  | string =~ regex = 1
+  | otherwise = 2
 
-startTree :: String -> String -> RTree a
-startTree regex string = Node (getNeg regex string) (getPos regex string)
+startTree :: String -> String -> String
+startTree regex string = do
+  -- a <- Node (getNeg regex string) (getPos regex string)
+  "hi"
 
 getNeg :: String -> String -> RTree a
 getNeg regex string = Node Nil Nil
