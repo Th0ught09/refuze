@@ -14,11 +14,7 @@ main :: IO ()
 main = do
   a <- randomRIO (1 :: Int, 20)
   args <- getArgs
-  case processArgs args of
-    0 -> getTreeOutput args
-    1 -> putStrLn "Incorrect number of args"
-    2 -> putStrLn "No regex Match"
-    _ -> putStrLn "Unknown Error"
+  processArgs args
 
 -- getOutput :: Either (RTree a) String -> String
 -- getOutput tree = "matched"
@@ -38,11 +34,9 @@ processTree 2 = "no match"
 processTree 0 = "works!"
 processTree a = "other"
 
-getTreeOutput :: [String] -> IO ()
-getTreeOutput a =
-  let regex = a !! 1
-      string = a !! 2
-      tree = startTree regex string
+getTreeOutput :: String -> String -> IO ()
+getTreeOutput regex string =
+  let tree = startTree regex string
    in do
         putStrLn $ getLTree tree
         hPutStrLn stderr $ getRTree tree
@@ -53,15 +47,15 @@ getLTree a = "matches"
 getRTree :: RTree a -> String
 getRTree a = "non matches"
 
-processArgs :: [String] -> Int
+processArgs :: [String] -> IO ()
 processArgs a = case a of
   [regex, string] -> testRegex regex string
-  _ -> 1
+  _ -> hPutStrLn stderr "requires 2 arguments"
 
-testRegex :: String -> String -> Int
+testRegex :: String -> String -> IO ()
 testRegex regex string
-  | string =~ regex = 0
-  | otherwise = 2
+  | string =~ regex = hPutStrLn stderr "ensure the string matches the regex"
+  | otherwise = getTreeOutput regex string
 
 startTree :: String -> String -> RTree a
 startTree regex string = Node (getNeg regex string) (getPos regex string)
