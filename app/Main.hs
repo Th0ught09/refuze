@@ -9,9 +9,7 @@ import Text.Regex.TDFA
 pureGen :: StdGen
 pureGen = mkStdGen 137
 
-data Node = String
-
-data RTree a = Nil | Node (RTree a) (RTree a)
+data RTree a = Nil | Node String (RTree a) (RTree a)
 
 main :: IO ()
 main = do
@@ -43,30 +41,50 @@ getRTree :: RTree a -> String
 getRTree a = "non matches"
 
 startTree :: String -> String -> Int -> RTree a
-startTree regex string depth = Node (getNeg regex string depth) (getPos regex string depth)
+startTree regex string depth = Node string (getNeg regex string depth) (getPos regex string depth)
 
 getNeg :: String -> String -> Int -> RTree a
-getNeg regex string depth = Node Nil Nil
-getNeg regex string 0 = Nil
-
-badMatch :: String -> String -> String
-badMatch regex string =
-  let index = fst $ uniformR (1 :: Int, length string :: Int) pureGen
-      choice = fst $ uniformR (1 :: Int, 3) pureGen
-   in case choice of
-        1 -> removeChar regex string
-        2 -> addChar regex string
-        _ -> changeChar regex string
-
-removeChar :: String -> String -> String
-removeChar regex string = ""
-
-addChar :: String -> String -> String
-addChar regex string = ""
-
-changeChar :: String -> String -> String
-changeChar regex string = ""
+getNeg regex string depth =
+  let newString = badMatch regex string
+   in Node newString (getNeg regex newString depth >> 2) (getPos regex newString depth >> 2)
+getNeg _ _ 0 = Nil
 
 getPos :: String -> String -> Int -> RTree a
-getPos regex string depth = Node Nil Nil
-getPos regex string 0 = Nil
+getPos regex string depth =
+  let newString = posMatch regex string
+   in Node newString (getNeg regex newString depth >> 2) (getPos regex newString depth >> 2)
+getPos _ _ 0 = Nil
+
+badMatch :: String -> String -> String
+badMatch regex string
+  | newString =~ regex = badMatch regex string
+  | otherwise = newString
+  where
+    newString = getNewString string
+
+posMatch :: String -> String -> String
+posMatch regex string
+  | newString =~ regex = newString
+  | otherwise = posMatch regex string
+  where
+    newString = getNewString string
+
+getNewString :: String -> String
+getNewString string =
+  let choice = fst $ uniformR (1 :: Int, 3) pureGen
+   in case choice of
+        1 -> removeChar string
+        2 -> addChar string
+        _ -> changeChar string
+
+removeChar :: String -> String
+removeChar string = ""
+
+addChar :: String -> String
+addChar string = ""
+
+changeChar :: String -> String
+changeChar string = ""
+
+getRanIndex :: String -> Int
+getRanIndex string = fst $ uniformR (1 :: Int, length string :: Int) pureGen
