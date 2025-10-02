@@ -1,5 +1,6 @@
 module Main where
 
+import Data.Char
 import System.Environment (getArgs)
 import System.Exit
 import System.IO
@@ -46,13 +47,13 @@ startTree regex string depth = Node string (getNeg regex string depth) (getPos r
 getNeg :: String -> String -> Int -> RTree a
 getNeg regex string depth =
   let newString = badMatch regex string
-   in Node newString (getNeg regex newString depth >> 2) (getPos regex newString depth >> 2)
+   in Node newString (getNeg regex newString depth) (getPos regex newString depth)
 getNeg _ _ 0 = Nil
 
 getPos :: String -> String -> Int -> RTree a
 getPos regex string depth =
   let newString = posMatch regex string
-   in Node newString (getNeg regex newString depth >> 2) (getPos regex newString depth >> 2)
+   in Node newString (getNeg regex newString depth) (getPos regex newString depth)
 getPos _ _ 0 = Nil
 
 badMatch :: String -> String -> String
@@ -78,13 +79,24 @@ getNewString string =
         _ -> changeChar string
 
 removeChar :: String -> String
-removeChar string = ""
+removeChar string =
+  let index = fst $ uniformR (0, length string - 1) pureGen
+      splitTup = splitAt index string
+   in fst splitTup ++ tail (snd splitTup)
 
 addChar :: String -> String
-addChar string = ""
+addChar string =
+  let index = fst $ uniformR (0, length string - 1) pureGen
+      char = chr $ fst $ uniformR (32, 126) pureGen
+      splitTup = splitAt index string
+   in fst splitTup ++ [char] ++ snd splitTup
 
 changeChar :: String -> String
-changeChar string = ""
+changeChar string =
+  let index = fst $ uniformR (0, length string - 1) pureGen
+      char = chr $ fst $ uniformR (32, 126) pureGen
+      splitTup = splitAt index string
+   in fst splitTup ++ [char] ++ tail (snd splitTup)
 
 getRanIndex :: String -> Int
 getRanIndex string = fst $ uniformR (1 :: Int, length string :: Int) pureGen
