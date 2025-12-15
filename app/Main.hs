@@ -1,5 +1,7 @@
 module Main where
 
+import Data.Bits
+import Data.Word
 import System.Environment (getArgs)
 import System.Exit
 import System.IO
@@ -24,12 +26,12 @@ processArgs a = case a of
 
 testRegex :: String -> String -> IO ()
 testRegex regex string
-  | string =~ regex = hPutStrLn stderr "ensure the string matches the regex"
-  | otherwise = getTreeOutput regex string
+  | string =~ regex = getTreeOutput regex string
+  | otherwise = hPutStrLn stderr "ensure the string matches the regex"
 
 getTreeOutput :: String -> String -> IO ()
 getTreeOutput regex string =
-  let tree = startTree regex string 1000
+  let tree = startTree regex string 10
    in do
         putStrLn $ getLTree tree
         hPutStrLn stderr $ getRTree tree
@@ -46,13 +48,13 @@ startTree regex string depth = Node string (getNeg regex string depth) (getPos r
 getNeg :: String -> String -> Int -> RTree a
 getNeg regex string depth =
   let newString = badMatch regex string
-   in Node newString (getNeg regex newString depth >> 2) (getPos regex newString depth >> 2)
+   in Node newString (getNeg regex newString (depth - 1)) (getPos regex newString (depth - 1))
 getNeg _ _ 0 = Nil
 
 getPos :: String -> String -> Int -> RTree a
 getPos regex string depth =
   let newString = posMatch regex string
-   in Node newString (getNeg regex newString depth >> 2) (getPos regex newString depth >> 2)
+   in Node newString (getNeg regex newString (depth - 1)) (getPos regex newString (depth - 1))
 getPos _ _ 0 = Nil
 
 badMatch :: String -> String -> String
