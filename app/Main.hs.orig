@@ -1,6 +1,12 @@
 module Main where
 
+<<<<<<< HEAD
+import Data.Bits
+import Data.Word
+||||||| 0adf18a
+=======
 import Data.Char
+>>>>>>> aa49e3a1535fddb8c729f4ce2e65a12ee9eb4d12
 import System.Environment (getArgs)
 import System.Exit
 import System.IO
@@ -25,12 +31,12 @@ processArgs a = case a of
 
 testRegex :: String -> String -> IO ()
 testRegex regex string
-  | string =~ regex = hPutStrLn stderr "ensure the string matches the regex"
-  | otherwise = getTreeOutput regex string
+  | string =~ regex = getTreeOutput regex string
+  | otherwise = hPutStrLn stderr "ensure the string matches the regex"
 
 getTreeOutput :: String -> String -> IO ()
 getTreeOutput regex string =
-  let tree = startTree regex string 1000
+  let tree = startTree regex string 10
    in do
         putStrLn $ getLTree tree
         hPutStrLn stderr $ getRTree tree
@@ -47,13 +53,25 @@ startTree regex string depth = Node string (getNeg regex string depth) (getPos r
 getNeg :: String -> String -> Int -> RTree a
 getNeg regex string depth =
   let newString = badMatch regex string
+<<<<<<< HEAD
+   in Node newString (getNeg regex newString (depth - 1)) (getPos regex newString (depth - 1))
+||||||| 0adf18a
+   in Node newString (getNeg regex newString depth >> 2) (getPos regex newString depth >> 2)
+=======
    in Node newString (getNeg regex newString depth) (getPos regex newString depth)
+>>>>>>> aa49e3a1535fddb8c729f4ce2e65a12ee9eb4d12
 getNeg _ _ 0 = Nil
 
 getPos :: String -> String -> Int -> RTree a
 getPos regex string depth =
   let newString = posMatch regex string
+<<<<<<< HEAD
+   in Node newString (getNeg regex newString (depth - 1)) (getPos regex newString (depth - 1))
+||||||| 0adf18a
+   in Node newString (getNeg regex newString depth >> 2) (getPos regex newString depth >> 2)
+=======
    in Node newString (getNeg regex newString depth) (getPos regex newString depth)
+>>>>>>> aa49e3a1535fddb8c729f4ce2e65a12ee9eb4d12
 getPos _ _ 0 = Nil
 
 badMatch :: String -> String -> String
