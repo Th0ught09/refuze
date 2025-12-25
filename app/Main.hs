@@ -1,5 +1,6 @@
 module Main where
 
+import Data.Char
 import System.Environment (getArgs)
 import System.IO
 import System.Random
@@ -40,50 +41,62 @@ getRTree :: RTree a -> String
 getRTree a = "non matches"
 
 startTree :: String -> String -> Int -> RTree a
-startTree regex string depth = Node string (getNeg regex string depth) (getPos regex string depth)
+startTree regex string depth = Node string (getNeg regex string depth pureGen) (getPos regex string depth pureGen)
 
-getNeg :: String -> String -> Int -> RTree a
-getNeg regex string depth =
-  let newString = badMatch regex string
-   in Node newString (getNeg regex newString (depth - 1)) (getPos regex newString (depth - 1))
-getNeg _ _ 0 = Nil
+getNeg :: String -> String -> Int -> StdGen -> RTree a
+getNeg regex string depth gen =
+  let rand = getRanIndex string gen 
+      new_gen = snd rand
+      newString = badMatch regex string rand
+   in Node newString (getNeg regex newString (depth - 1) new_gen) (getPos regex newString (depth - 1) new_gen)
+getNeg _ _ 0 _ = Nil
 
-getPos :: String -> String -> Int -> RTree a
-getPos regex string depth =
-  let newString = posMatch regex string
-   in Node newString (getNeg regex newString (depth - 1)) (getPos regex newString (depth - 1))
-getPos _ _ 0 = Nil
+getPos :: String -> String -> Int -> StdGen -> RTree a
+getPos regex string depth gen =
+  let rand = getRanIndex string gen
+      new_gen = snd rand
+      newString = posMatch regex string rand
+   in Node newString (getNeg regex newString (depth - 1) new_gen) (getPos regex newString (depth - 1) new_gen)
+getPos _ _ 0 _ = Nil
 
-badMatch :: String -> String -> String
-badMatch regex string
-  | newString =~ regex = badMatch regex string
+badMatch :: String -> String -> (Int, StdGen) -> String
+badMatch regex string rand
+  | newString =~ regex = badMatch regex string rand
   | otherwise = newString
   where
-    newString = getNewString string
+    newString = getNewString string rand
 
-posMatch :: String -> String -> String
-posMatch regex string
+posMatch :: String -> String -> (Int, StdGen) -> String
+posMatch regex string rand
   | newString =~ regex = newString
-  | otherwise = posMatch regex string
+  | otherwise = posMatch regex string rand
   where
-    newString = getNewString string
+    newString = getNewString string rand
 
-getNewString :: String -> String
-getNewString string =
-  let choice = fst $ uniformR (1 :: Int, 3) pureGen
+getNewString :: String -> (Int, StdGen) -> String
+getNewString string rand =
+  let choice = fst $ uniformR (1 :: Int, 3) (snd rand)
    in case choice of
-        1 -> removeChar string
-        2 -> addChar string
-        _ -> changeChar string
+        1 -> removeChar string (fst rand)
+        2 -> addChar string (fst rand)
+        _ -> changeChar string (fst rand)
 
-removeChar :: String -> String
-removeChar string = ""
+removeChar :: String -> Int -> String
+removeChar string index =
+  let splitUp = splitAt index string
+   in fst splitUp ++ tail (snd splitUp)
 
-addChar :: String -> String
-addChar string = ""
+addChar :: String -> Int -> String
+addChar string index =
+  let char = chr $ fst $ uniformR (32, 126) pureGen
+      splitUp = splitAt index string
+   in fst splitUp ++ [char] ++ snd splitUp
 
-changeChar :: String -> String
-changeChar string = ""
+changeChar :: String -> Int -> String
+changeChar string index =
+  let char = chr $ fst $ uniformR (32, 126) pureGen
+      splitUp = splitAt index string
+   in fst splitUp ++ [char] ++ tail (snd splitUp)
 
-getRanIndex :: String -> (Int, StdGen)
-getRanIndex string = uniformR (1 :: Int, length string :: Int) pureGen
+getRanIndex :: String -> StdGen -> (Int, StdGen)
+getRanIndex string gen = uniformR (1 :: Int, length string :: Int) gen
