@@ -1,8 +1,6 @@
 module Main where
 
-import Data.Char
 import System.Environment (getArgs)
-import System.Exit
 import System.IO
 import System.Random
 import Text.Regex.TDFA
@@ -25,12 +23,12 @@ processArgs a = case a of
 
 testRegex :: String -> String -> IO ()
 testRegex regex string
-  | string =~ regex = hPutStrLn stderr "ensure the string matches the regex"
-  | otherwise = getTreeOutput regex string
+  | string =~ regex = getTreeOutput regex string
+  | otherwise = hPutStrLn stderr "ensure the string matches the regex"
 
 getTreeOutput :: String -> String -> IO ()
 getTreeOutput regex string =
-  let tree = startTree regex string 1000
+  let tree = startTree regex string 10
    in do
         putStrLn $ getLTree tree
         hPutStrLn stderr $ getRTree tree
@@ -47,13 +45,13 @@ startTree regex string depth = Node string (getNeg regex string depth) (getPos r
 getNeg :: String -> String -> Int -> RTree a
 getNeg regex string depth =
   let newString = badMatch regex string
-   in Node newString (getNeg regex newString depth) (getPos regex newString depth)
+   in Node newString (getNeg regex newString (depth - 1)) (getPos regex newString (depth - 1))
 getNeg _ _ 0 = Nil
 
 getPos :: String -> String -> Int -> RTree a
 getPos regex string depth =
   let newString = posMatch regex string
-   in Node newString (getNeg regex newString depth) (getPos regex newString depth)
+   in Node newString (getNeg regex newString (depth - 1)) (getPos regex newString (depth - 1))
 getPos _ _ 0 = Nil
 
 badMatch :: String -> String -> String
@@ -79,24 +77,13 @@ getNewString string =
         _ -> changeChar string
 
 removeChar :: String -> String
-removeChar string =
-  let index = fst $ uniformR (0, length string - 1) pureGen
-      splitTup = splitAt index string
-   in fst splitTup ++ tail (snd splitTup)
+removeChar string = ""
 
 addChar :: String -> String
-addChar string =
-  let index = fst $ uniformR (0, length string - 1) pureGen
-      char = chr $ fst $ uniformR (32, 126) pureGen
-      splitTup = splitAt index string
-   in fst splitTup ++ [char] ++ snd splitTup
+addChar string = ""
 
 changeChar :: String -> String
-changeChar string =
-  let index = fst $ uniformR (0, length string - 1) pureGen
-      char = chr $ fst $ uniformR (32, 126) pureGen
-      splitTup = splitAt index string
-   in fst splitTup ++ [char] ++ tail (snd splitTup)
+changeChar string = ""
 
-getRanIndex :: String -> Int
-getRanIndex string = fst $ uniformR (1 :: Int, length string :: Int) pureGen
+getRanIndex :: String -> (Int, StdGen)
+getRanIndex string = uniformR (1 :: Int, length string :: Int) pureGen
