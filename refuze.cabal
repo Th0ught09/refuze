@@ -54,7 +54,7 @@ common warnings
     ghc-options: -Wall
 
 test-suite refuze-test
-    import: common-settings
+    type: exitcode-stdio-1.0
     hs-source-dirs: test
     main-is: Spec.hs
     build-depends:
