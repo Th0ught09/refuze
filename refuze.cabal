@@ -73,6 +73,10 @@ executable refuze
         regex-tdfa ^>=1.3.2,
         random >= 1.3,
 
+    other-modules:
+        Match
+        Tree
+        String
 
     -- Directories containing source files.
     hs-source-dirs:   app

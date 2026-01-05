@@ -7,11 +7,6 @@ import System.Random
 import Text.Regex.TDFA
 import Tree
 
-pureGen :: StdGen
-pureGen = mkStdGen 137
-
-data RTree a = Nil | Node {value :: String, left :: RTree a, right :: RTree a} deriving (Show)
-
 main :: IO ()
 main = do
   -- a <- randomRIO (1 :: Int, 20)
