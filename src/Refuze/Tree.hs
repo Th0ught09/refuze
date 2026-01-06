@@ -1,7 +1,7 @@
-module Tree where
+module Refuze.Tree where
 
-import Match
-import String
+import Refuze.Match
+import Refuze.String
 import System.Random
 
 data RTree a = Nil | Node {value :: String, left :: RTree a, right :: RTree a} deriving (Show)

@@ -1,4 +1,4 @@
-module String where
+module Refuze.String where
 
 import Data.Char
 import System.Random

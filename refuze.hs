@@ -1,11 +1,11 @@
 module Main where
 
 import Data.Char
+import Refuze.Tree
 import System.Environment (getArgs)
 import System.IO
 import System.Random
 import Text.Regex.TDFA
-import Tree
 
 main :: IO ()
 main = do

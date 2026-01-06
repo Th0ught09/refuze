@@ -1,6 +1,6 @@
-module Match where
+module Refuze.Match where
 
-import String
+import Refuze.String
 import System.Random
 import Text.Regex.TDFA
 
