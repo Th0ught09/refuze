@@ -15,7 +15,7 @@ getNewString string rand =
 removeChar :: String -> Int -> String
 removeChar string index =
   let splitUp = splitAt index string
-   in fst splitUp ++ tail (snd splitUp)
+   in fst splitUp ++ drop 1 (snd splitUp)
 
 addChar :: String -> Int -> Char -> String
 addChar string index random_char =
@@ -25,7 +25,4 @@ addChar string index random_char =
 changeChar :: String -> Int -> Char -> String
 changeChar string index random_char =
   let splitUp = splitAt index string
-   in fst splitUp ++ [random_char] ++ tail (snd splitUp)
-
-getRanIndex :: String -> StdGen -> (Int, StdGen)
-getRanIndex string gen = uniformR (1 :: Int, length string :: Int) gen
+   in fst splitUp ++ [random_char] ++ drop 1 (snd splitUp)
