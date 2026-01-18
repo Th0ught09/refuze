@@ -1,11 +1,11 @@
 module Main where
 
 import Data.Char
+import Refuze.Tree
 import System.Environment (getArgs)
 import System.IO
 import System.Random
 import Text.Regex.TDFA
-import Tree
 
 main :: IO ()
 main = do
@@ -27,5 +27,5 @@ getTreeOutput :: String -> String -> IO ()
 getTreeOutput regex string =
   let tree = startTree regex string 10
    in do
-        putStrLn $ getLTree tree
-        hPutStrLn stderr $ getRTree tree
+        putStrLn $ getLTree tree []
+        hPutStrLn stderr $ getRTree tree []
