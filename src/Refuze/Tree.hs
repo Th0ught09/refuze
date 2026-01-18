@@ -10,11 +10,17 @@ data RTree a = Nil | Node {value :: String, left :: RTree a, right :: RTree a} d
 pureGen :: StdGen
 pureGen = mkStdGen 137
 
-getLTree :: RTree a -> String
-getLTree a = "matches"
+getValue :: RTree a -> String
+getValue Nil = ""
+getValue a = value a ++ "\n"
 
-getRTree :: RTree a -> String
-getRTree a = "non matches"
+getLTree :: RTree a -> [Char] -> String
+getLTree Nil b = b
+getLTree a b = b ++ getValue (left a) ++ getLTree (left a) b ++ getLTree (right a) b
+
+getRTree :: RTree a -> [Char] -> String
+getRTree Nil b = b
+getRTree a b = b ++ getValue (right a) ++ getRTree (left a) b ++ getRTree (right a) b
 
 startTree :: String -> String -> Int -> RTree a
 startTree regex string depth = Node string (getNeg regex string depth pureGen) (getPos regex string depth pureGen)

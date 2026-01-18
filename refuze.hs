@@ -27,5 +27,5 @@ getTreeOutput :: String -> String -> IO ()
 getTreeOutput regex string =
   let tree = startTree regex string 10
    in do
-        putStrLn $ getLTree tree
-        hPutStrLn stderr $ getRTree tree
+        putStrLn $ getLTree tree []
+        hPutStrLn stderr $ getRTree tree []
