@@ -7,7 +7,6 @@ import Text.Regex.TDFA
 
 main :: IO ()
 main = do
-  -- a <- randomRIO (1 :: Int, 20)
   args <- getArgs
   processArgs args
 
