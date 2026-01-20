@@ -1,7 +1,7 @@
 module Main where
 
 import Refuze.Tree
-import System.Environment (getArgs)
+import System.Environment
 import System.IO
 import Text.Regex.TDFA
 
