@@ -1,7 +1,7 @@
 module Main where
 
-import qualified Match
-import qualified String
+import Refuze.Match
+import Refuze.String
 import Test.Hspec
 
 main :: IO ()
