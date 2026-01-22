@@ -17,11 +17,11 @@ match_tests =
     "Testing Matching library"
     [ testCase "returns empty string" $
         assertBool "empty string" $
-          badMatch "" "" (0, pureGen) 0 == ""
+          badMatch "" "" (0, pureGen) 0 == "",
+      testCase "Basic new string on bad match" $
+        assertBool "gq" $
+          badMatch "h" "gq" (1, pureGen) 1 == "gSq"
     ]
 
 main :: IO ()
 main = defaultMain $ refuze_tests
-
--- describe "Match" $ do
---   it
