@@ -16,11 +16,9 @@ match_tests =
   testGroup
     "Testing Matching library"
     [ testCase "returns empty string" $
-        assertBool "empty string" $
-          badMatch "" "" (0, pureGen) 0 == "",
+        compare (badMatch "" "" (0, pureGen) 0) "" @?= EQ,
       testCase "Basic new string on bad match" $
-        assertBool "gq" $
-          badMatch "h" "gq" (1, pureGen) 1 == "gSq"
+        compare (badMatch "h" "gq" (1, pureGen) 1) "gSq" @?= EQ
     ]
 
 main :: IO ()
