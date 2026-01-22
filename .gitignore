@@ -21,3 +21,6 @@ cabal.project.local
 cabal.project.local~
 .HTF/
 .ghc.environment.*
+
+# temp before I understand how to import these
+test/Tests
