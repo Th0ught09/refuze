@@ -18,7 +18,9 @@ match_tests =
     [ testCase "returns empty string" $
         compare (badMatch "" "" (0, pureGen) 0) "" @?= EQ,
       testCase "Basic new string on bad match" $
-        compare (badMatch "h" "gq" (1, pureGen) 1) "gSq" @?= EQ
+        compare (badMatch "h" "gq" (1, pureGen) 1) "gSq" @?= EQ,
+      testCase "Basic new string on bad match" $
+        compare (badMatch "var" "var" (1, pureGen) 1) "vSar" @?= EQ
     ]
 
 main :: IO ()
