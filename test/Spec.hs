@@ -17,10 +17,12 @@ match_tests =
     "Testing Matching library"
     [ testCase "returns empty string" $
         compare (badMatch "" "" (0, pureGen) 0) "" @?= EQ,
-      testCase "Basic new string on bad match" $
+      testCase "Non matching string on bad match" $
         compare (badMatch "h" "gq" (1, pureGen) 1) "gSq" @?= EQ,
-      testCase "Basic new string on bad match" $
-        compare (badMatch "var" "var" (1, pureGen) 1) "vSar" @?= EQ
+      testCase "Matching string on bad match" $
+        compare (badMatch "var" "var" (1, pureGen) 1) "vSar" @?= EQ,
+      testCase "Basic new string on pos match" $
+        compare (badMatch "" "" (0, pureGen) 0) "" @?= EQ
     ]
 
 main :: IO ()
