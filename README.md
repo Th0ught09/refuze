@@ -4,6 +4,12 @@ REgex FUZzEr
 
 Enter a regular expression with a string and `refuze` will output as many matches and mismatches as you need
 
+## Usage
+
+``` shell
+refuze "<regular expression>" "<initial matching string>"
+```
+
 ## Process
 
 `refuze` will take the string and build a tree by randomly adding, deleting or changing characters in the string and then display the positive matches in `stdout` and the negative matches in `stderr`
@@ -12,3 +18,4 @@ Enter a regular expression with a string and `refuze` will output as many matche
 
 - [x] cli args
 - [x] limited tree search
+- [ ] have tool not require initial matching string
