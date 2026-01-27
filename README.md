@@ -11,4 +11,4 @@ Enter a regular expression with a string and `refuze` will output as many matche
 ## Progress
 
 - [x] cli args
-- [ ] limited tree search
+- [x] limited tree search
