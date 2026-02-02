@@ -10,6 +10,17 @@ main = do
   args <- getArgs
   processArgs args
 
+options = [
+    Option "a" ["check-sourced"]
+        (NoArg $ Flag "sourced" "false") "Include warnings from sourced files"
+]
+
+processArgs2 argv =
+  case getOpt Permute options argv of
+    (opts, files, []) -> putStrLn "works"
+    (_, _, errors) -> do
+      hPutStrLn stderr "requires 2 arguments"
+
 processArgs :: [String] -> IO ()
 processArgs a = case a of
   [regex, string] -> testRegex regex string
