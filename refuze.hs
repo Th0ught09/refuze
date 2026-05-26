@@ -1,25 +1,32 @@
 module Main where
 
+import Data.Maybe
 import Refuze.Tree
+import System.Console.GetOpt
 import System.Environment
 import System.IO
 import Text.Regex.TDFA
+
+data Options = Options
+  { optOut :: String,
+    optErr :: String
+  }
+  deriving (Show)
+
+data Flag = Flag String String
+
+options =
+  [ Option
+      "o"
+      ["output-file"]
+      (OptArg (maybe (Flag "color" "always") (Flag "color")) "WHEN")
+      "Output File"
+  ]
 
 main :: IO ()
 main = do
   args <- getArgs
   processArgs args
-
-options = [
-    Option "a" ["check-sourced"]
-        (NoArg $ Flag "sourced" "false") "Include warnings from sourced files"
-]
-
-processArgs2 argv =
-  case getOpt Permute options argv of
-    (opts, files, []) -> putStrLn "works"
-    (_, _, errors) -> do
-      hPutStrLn stderr "requires 2 arguments"
 
 processArgs :: [String] -> IO ()
 processArgs a = case a of
